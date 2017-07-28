@@ -3,6 +3,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import net.minecraft.block.Block;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -10,9 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextComponentString;
 
 public class BlockFillCommand implements ICommand {
 
@@ -24,12 +24,8 @@ public class BlockFillCommand implements ICommand {
 		aliases.add("fb");
 	}
 
-	@Override
-	public int compareTo(Object o) {
-		return 0;
-	}
+	
 
-	@Override
 	public String getCommandUsage(ICommandSender sender) {
 		return "fillblocks <block ID>";
 	}
@@ -47,8 +43,7 @@ public class BlockFillCommand implements ICommand {
 	}
 
 	private void sendErrorMessage(ICommandSender sender, String message) {
-		sender.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_RED
-				+ message));
+		sender.sendMessage(new TextComponentString(ChatFormatting.GOLD + "Uh oh! Something went wrong! :("));
 	}
 
 	@Override
@@ -62,7 +57,6 @@ public class BlockFillCommand implements ICommand {
 		return aliases;
 	}
 
-	@Override
 	public void execute(ICommandSender sender, String[] args)
 			throws CommandException {
 		if (args.length != 1) {
@@ -71,7 +65,7 @@ public class BlockFillCommand implements ICommand {
 		}
 		try {
 			block = Block.getBlockById(Integer.parseInt(args[0]));
-			if (block == Blocks.air && Integer.parseInt(args[0]) != 0) {
+			if (block == Blocks.AIR && Integer.parseInt(args[0]) != 0) {
 				sendErrorMessage(sender, "The argument \"" + args[0]
 						+ "\" is not a valid block ID!");
 				return;
@@ -108,8 +102,8 @@ public class BlockFillCommand implements ICommand {
 					.get(1); y++) {
 				for (int z = BlockFillerPositionSelector.pos1.get(2); z <= BlockFillerPositionSelector.pos2
 						.get(2); z++) {
-					((EntityPlayer) sender).worldObj.setBlockState(
-							new BlockPos(x, y, z), block.getBlockState()
+					((EntityPlayer) sender).world.setBlockState(
+							new net.minecraft.util.math.BlockPos(x, y, z), block.getBlockState()
 									.getBaseState());
 				}
 			}
@@ -117,14 +111,12 @@ public class BlockFillCommand implements ICommand {
 
 	}
 
-	@Override
 	public boolean canCommandSenderUse(ICommandSender sender) {
 		return sender instanceof EntityPlayer;
 	}
 
-	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args,
-			BlockPos pos) {
+			net.minecraft.util.math.BlockPos pos) {
 		// TODO Auto-generated method stub
 		return null;
 	}
