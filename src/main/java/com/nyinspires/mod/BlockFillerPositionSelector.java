@@ -11,6 +11,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+// Not working on purpose.
 public class BlockFillerPositionSelector {
 	
 	static List<Integer> pos1 = new ArrayList();
